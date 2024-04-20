@@ -23,7 +23,7 @@ export class ThreeSixNineGameImpl implements ThreeSixNineGame {
 
   do369(number: number) {
     for (let num of String(number)) {
-      if (Number(num) % 3 === 0) return "clap";
+      if (Number(num) !== 0 && Number(num) % 3 === 0) return "clap";
     }
 
     return `${number}`;

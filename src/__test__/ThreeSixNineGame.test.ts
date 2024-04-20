@@ -19,6 +19,7 @@ describe("369 게임", () => {
     it("3이 포함되어 있다면, 박수를 한 번 쳐야 한다.", () => {
       expect(threeSixNineGame.do369(3)).toBe("clap");
       expect(threeSixNineGame.do369(16)).toBe("clap");
+      expect(threeSixNineGame.do369(10)).toBe("10"); // 0일 경우에도 나머지 0이 나옴
       expect(threeSixNineGame.do369(33)).toBe("clap");
     });
 
