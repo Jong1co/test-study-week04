@@ -25,10 +25,13 @@ export class ThreeSixNineGameImpl implements ThreeSixNineGame {
   }
 
   playGame(players: Player[]) {
-    const numberList = Array.from({ length: 100 }, (_, i) => i);
     const playerLength = players.length;
 
-    for (let index of numberList) {
+    let index = 0;
+
+    // test를 위해서 100으로 제한해둠
+    // test가 영향을 안 받게 하기 위해서는 mocking을 해줘야 할 것 같음
+    while (index < 100) {
       const number = index + 1;
       const answer = this.do369(number);
 
@@ -44,6 +47,7 @@ export class ThreeSixNineGameImpl implements ThreeSixNineGame {
       }
 
       console.log(`${player.name}: ${answer}`);
+      index++;
     }
   }
 

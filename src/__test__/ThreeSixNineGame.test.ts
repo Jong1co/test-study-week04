@@ -1,4 +1,5 @@
 import { ThreeSixNineGame, ThreeSixNineGameImpl } from "..";
+import { BusanRule } from "../BusanRule";
 import { Player, PlayerImpl } from "../Player";
 
 export const getLogSpy = () => {
@@ -99,6 +100,22 @@ describe("369 게임", () => {
       });
 
       expect(logSpy).toHaveBeenCalledTimes(2);
+    });
+  });
+});
+
+describe("부산 369 게임", () => {
+  describe("do369", () => {
+    let threeSixNineGame: ThreeSixNineGame;
+
+    beforeEach(() => {
+      threeSixNineGame = new BusanRule();
+    });
+
+    it("3의 배수가 포함되어 있다면, 갯수만큼 박수를 쳐야 한다.", () => {
+      expect(threeSixNineGame.do369(3)).toBe("clap");
+      expect(threeSixNineGame.do369(393)).toBe("clapclapclap");
+      expect(threeSixNineGame.do369(33)).toBe("clapclap");
     });
   });
 });
