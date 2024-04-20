@@ -1,5 +1,7 @@
+import { BusanRule } from "./BusanRule";
 import { ClapCounter, ClapCounterImpl } from "./ClapCounter";
 import { Player, PlayerImpl } from "./Player";
+import { SeoulRule } from "./SeoulRule";
 
 export interface ThreeSixNineGame {
   do369: (number: number) => string;
@@ -7,66 +9,40 @@ export interface ThreeSixNineGame {
 }
 
 export class ThreeSixNineGameImpl implements ThreeSixNineGame {
-  constructor() {
-    const players = [
-      { name: "짱구", incorrectAnswerRate: 0.2 }, //
-      { name: "훈이", incorrectAnswerRate: 0.3 },
-      { name: "맹구", incorrectAnswerRate: 0.25 },
-      { name: "유리", incorrectAnswerRate: 0.1 },
-    ].map((variable) => new PlayerImpl(variable));
+  rule: ThreeSixNineGame;
 
-    const clapCounter = new ClapCounterImpl();
-
-    this.playGame(players, clapCounter);
+  constructor(rule: ThreeSixNineGame) {
+    this.rule = rule;
   }
 
   do369(number: number) {
-    for (let num of String(number)) {
-      if (Number(num) % 3 === 0) return "clap";
-    }
-
-    return `${number}`;
+    return this.rule.do369(number);
   }
 
-  playGame(players: Player[], clapCounter?: ClapCounter) {
-    const playerLength = players.length;
-
-    let index = 0;
-
-    // test를 위해서 100으로 제한해둠
-    // test가 영향을 안 받게 하기 위해서는 mocking을 해줘야 할 것 같음
-    while (index < 100) {
-      const number = index + 1;
-      const answer = this.do369(number);
-
-      const player = players[index % playerLength];
-      const isIncorrectAnswer = this.isTurnOfIncorrectAnswer(player);
-
-      if (isIncorrectAnswer) {
-        const incorrectAnswer = this.getIncorrectAnswer(number);
-        console.log(`${player.name}: ${incorrectAnswer}`);
-        console.log("틀렸습니다! 게임을 종료합니다.");
-
-        return;
-      }
-
-      const clapCount = answer.match(/clap/g)?.length || 0;
-
-      clapCounter?.addClapCount(clapCount);
-
-      console.log(`${player.name}: ${answer}`);
-      index++;
-    }
-  }
-
-  private isTurnOfIncorrectAnswer(player: Player) {
-    const random = Math.random();
-    return player.incorrectAnswerRate > random;
-  }
-
-  private getIncorrectAnswer(number: number) {
-    return number - 1;
+  playGame(players: Player[], clapCounter?: ClapCounter | undefined) {
+    return this.rule.playGame(players, clapCounter);
   }
 }
 
-const threeSixNineGame = new ThreeSixNineGameImpl();
+const players = [
+  { name: "짱구", incorrectAnswerRate: 0.2 }, //
+  { name: "훈이", incorrectAnswerRate: 0.3 },
+  { name: "맹구", incorrectAnswerRate: 0.25 },
+  { name: "유리", incorrectAnswerRate: 0.1 },
+].map((variable) => new PlayerImpl(variable));
+
+const clapCounter = new ClapCounterImpl();
+const seoulRule = new SeoulRule();
+const busanRule = new BusanRule();
+
+const seoulGame = new ThreeSixNineGameImpl(seoulRule);
+const busanGame = new ThreeSixNineGameImpl(busanRule);
+
+const gameList = [seoulGame, busanGame];
+
+(async () => {
+  await Promise.all(
+    gameList.map((game) => game.playGame(players, clapCounter))
+  );
+  clapCounter.printClapCount();
+})();
