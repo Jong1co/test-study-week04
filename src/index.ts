@@ -1,24 +1,21 @@
-import { MemoryBankAccountRepository } from "./repository/MemoryBankAccountRepository";
-import {
-  BankAccountService,
-  BankAccountServiceImpl,
-} from "./service/BankAccountService";
-
-export class App {
-  bankAccountService: BankAccountService;
-
-  constructor() {
-    this.bankAccountService = new BankAccountServiceImpl(
-      new MemoryBankAccountRepository()
-    );
-  }
-
-  async start() {
-    await this.bankAccountService.deposit(1, 5000);
-    const balance = await this.bankAccountService.getBalance(1);
-  }
+export interface ThreeSixNineGame {
+  do369: (number: number) => string;
+  playGame: (players: string[]) => void;
 }
 
-const app = new App();
+export class ThreeSixNineGameImpl implements ThreeSixNineGame {
+  constructor() {
+    const players = ["짱구", "훈이", "맹구", "유리"];
+    this.playGame(players);
+  }
 
-Promise.all([app.start(), app.start()]);
+  do369(number: number) {
+    for (let num of String(number)) {
+      if (Number(num) % 3 === 0) return "clap";
+    }
+
+    return `${number}`;
+  }
+
+  playGame(players: string[]) {}
+}
