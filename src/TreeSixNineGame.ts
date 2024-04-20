@@ -9,16 +9,15 @@ export interface ThreeSixNineGame {
 export class ThreeSixNineGameImpl implements ThreeSixNineGame {
   constructor() {
     const players = [
-      { name: "짱구", incorrectAnswerRate: 0.1 }, //
-      { name: "훈이", incorrectAnswerRate: 0.1 },
-      { name: "맹구", incorrectAnswerRate: 0.1 },
+      { name: "짱구", incorrectAnswerRate: 0.2 }, //
+      { name: "훈이", incorrectAnswerRate: 0.3 },
+      { name: "맹구", incorrectAnswerRate: 0.25 },
       { name: "유리", incorrectAnswerRate: 0.1 },
     ].map((variable) => new PlayerImpl(variable));
 
     const clapCounter = new ClapCounterImpl();
 
     this.playGame(players, clapCounter);
-    clapCounter.printClapCount();
   }
 
   do369(number: number) {
@@ -60,12 +59,12 @@ export class ThreeSixNineGameImpl implements ThreeSixNineGame {
     }
   }
 
-  isTurnOfIncorrectAnswer(player: Player) {
+  private isTurnOfIncorrectAnswer(player: Player) {
     const random = Math.random();
     return player.incorrectAnswerRate > random;
   }
 
-  getIncorrectAnswer(number: number) {
+  private getIncorrectAnswer(number: number) {
     return number - 1;
   }
 }
