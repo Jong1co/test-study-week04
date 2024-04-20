@@ -17,5 +17,14 @@ export class ThreeSixNineGameImpl implements ThreeSixNineGame {
     return `${number}`;
   }
 
-  playGame(players: string[]) {}
+  playGame(players: string[]) {
+    const numberList = Array.from({ length: 100 }, (_, i) => i + 1);
+    const playerLength = players.length;
+    numberList.forEach((number, i) => {
+      const answer = this.do369(number);
+      const player = players[i % playerLength];
+
+      console.log(`${player}: ${answer}`);
+    });
+  }
 }
