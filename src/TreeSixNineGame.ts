@@ -19,8 +19,13 @@ export class ThreeSixNineGameImpl implements ThreeSixNineGame {
     return this.rule.do369(number);
   }
 
-  playGame(players: Player[], clapCounter?: ClapCounter | undefined) {
-    return this.rule.playGame(players, clapCounter);
+  async playGame(players: Player[], clapCounter?: ClapCounter | undefined) {
+    try {
+      await this.rule.playGame(players, clapCounter);
+    } catch (e) {
+      console.log(e);
+      return e;
+    }
   }
 }
 
@@ -43,6 +48,5 @@ const gameList = [seoulGame, busanGame];
 (async () => {
   await Promise.all(
     gameList.map((game) => game.playGame(players, clapCounter))
-  );
-  clapCounter.printClapCount();
+  ).finally(() => clapCounter.printClapCount());
 })();
