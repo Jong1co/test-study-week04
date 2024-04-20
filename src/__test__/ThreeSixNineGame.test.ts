@@ -1,4 +1,5 @@
 import { ThreeSixNineGame, ThreeSixNineGameImpl } from "..";
+import { Player, PlayerImpl } from "../Player";
 
 export const getLogSpy = () => {
   const logSpy = jest.spyOn(console, "log");
@@ -29,12 +30,17 @@ describe("369 게임", () => {
 
   describe("playGame", () => {
     let threeSixNineGame: ThreeSixNineGame;
-    let players: string[];
+    let players: Player[];
     const logSpy = getLogSpy();
 
     beforeEach(() => {
       threeSixNineGame = new ThreeSixNineGameImpl();
-      players = ["짱구", "훈이", "맹구", "유리"];
+      players = [
+        { name: "짱구", incorrectAnswerRate: 0.2 }, //
+        { name: "훈이", incorrectAnswerRate: 0.3 },
+        { name: "맹구", incorrectAnswerRate: 0.25 },
+        { name: "유리", incorrectAnswerRate: 0.1 },
+      ].map((variable) => new PlayerImpl(variable));
     });
 
     it("player의 이름이 포함되어야 한다.", () => {
@@ -42,7 +48,7 @@ describe("369 게임", () => {
 
       const messages = Array.from(
         { length: 100 },
-        (_, i) => players[i % players.length]
+        (_, i) => players[i % players.length].name
       );
 
       // then

@@ -1,11 +1,18 @@
+import { Player, PlayerImpl } from "./Player";
+
 export interface ThreeSixNineGame {
   do369: (number: number) => string;
-  playGame: (players: string[]) => void;
+  playGame: (players: Player[]) => void;
 }
 
 export class ThreeSixNineGameImpl implements ThreeSixNineGame {
   constructor() {
-    const players = ["짱구", "훈이", "맹구", "유리"];
+    const players = [
+      { name: "짱구", incorrectAnswerRate: 0.2 }, //
+      { name: "훈이", incorrectAnswerRate: 0.3 },
+      { name: "맹구", incorrectAnswerRate: 0.25 },
+      { name: "유리", incorrectAnswerRate: 0.1 },
+    ].map((variable) => new PlayerImpl(variable));
     this.playGame(players);
   }
 
@@ -17,14 +24,25 @@ export class ThreeSixNineGameImpl implements ThreeSixNineGame {
     return `${number}`;
   }
 
-  playGame(players: string[]) {
-    const numberList = Array.from({ length: 100 }, (_, i) => i + 1);
+  playGame(players: Player[]) {
+    const numberList = Array.from({ length: 100 }, (_, i) => i);
     const playerLength = players.length;
-    numberList.forEach((number, i) => {
+
+    for (let index of numberList) {
+      const number = index + 1;
       const answer = this.do369(number);
-      const player = players[i % playerLength];
+
+      const player = players[index % playerLength].name;
 
       console.log(`${player}: ${answer}`);
-    });
+    }
+  }
+
+  isIncorrectAnswer(number: number) {
+    for (let num of String(number)) {
+      if (Number(num) % 3 === 0) return "clap";
+    }
+
+    return `${number}`;
   }
 }
