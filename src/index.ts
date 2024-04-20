@@ -32,17 +32,29 @@ export class ThreeSixNineGameImpl implements ThreeSixNineGame {
       const number = index + 1;
       const answer = this.do369(number);
 
-      const player = players[index % playerLength].name;
+      const player = players[index % playerLength];
+      const isIncorrectAnswer = this.isTurnOfIncorrectAnswer(player);
 
-      console.log(`${player}: ${answer}`);
+      if (isIncorrectAnswer) {
+        const incorrectAnswer = this.getIncorrectAnswer(number);
+        console.log(`${player.name}: ${incorrectAnswer}`);
+        console.log("틀렸습니다! 게임을 종료합니다.");
+
+        return;
+      }
+
+      console.log(`${player.name}: ${answer}`);
     }
   }
 
-  isIncorrectAnswer(number: number) {
-    for (let num of String(number)) {
-      if (Number(num) % 3 === 0) return "clap";
-    }
+  isTurnOfIncorrectAnswer(player: Player) {
+    const random = Math.random();
+    return player.incorrectAnswerRate > random;
+  }
 
-    return `${number}`;
+  getIncorrectAnswer(number: number) {
+    return number - 1;
   }
 }
+
+const threeSixNineGame = new ThreeSixNineGameImpl();

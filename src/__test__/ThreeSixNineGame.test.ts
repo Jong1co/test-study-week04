@@ -28,23 +28,23 @@ describe("369 게임", () => {
     });
   });
 
-  describe("playGame", () => {
+  describe("playGame>오답률이 0퍼센트 일 경우", () => {
     let threeSixNineGame: ThreeSixNineGame;
     let players: Player[];
-    const logSpy = getLogSpy();
 
     beforeEach(() => {
       threeSixNineGame = new ThreeSixNineGameImpl();
       players = [
-        { name: "짱구", incorrectAnswerRate: 0.2 }, //
-        { name: "훈이", incorrectAnswerRate: 0.3 },
-        { name: "맹구", incorrectAnswerRate: 0.25 },
-        { name: "유리", incorrectAnswerRate: 0.1 },
+        { name: "짱구", incorrectAnswerRate: 0 }, //
+        { name: "훈이", incorrectAnswerRate: 0 },
+        { name: "맹구", incorrectAnswerRate: 0 },
+        { name: "유리", incorrectAnswerRate: 0 },
       ].map((variable) => new PlayerImpl(variable));
     });
 
     it("player의 이름이 포함되어야 한다.", () => {
-      expect(threeSixNineGame.playGame(players));
+      const logSpy = getLogSpy();
+      threeSixNineGame.playGame(players);
 
       const messages = Array.from(
         { length: 100 },
@@ -58,7 +58,8 @@ describe("369 게임", () => {
     });
 
     it("정답에 3, 6, 9가 존재해선 안 된다.", () => {
-      expect(threeSixNineGame.playGame(players));
+      const logSpy = getLogSpy();
+      threeSixNineGame.playGame(players);
 
       const messages = Array.from(
         { length: 100 },
@@ -71,6 +72,33 @@ describe("369 게임", () => {
         expect(logSpy).not.toHaveBeenCalledWith(expect.stringContaining("6"));
         expect(logSpy).not.toHaveBeenCalledWith(expect.stringContaining("9"));
       });
+    });
+  });
+
+  describe("playGame>오답률이 100퍼센트 일 경우", () => {
+    let threeSixNineGame: ThreeSixNineGame;
+    let players: Player[];
+
+    beforeEach(() => {
+      threeSixNineGame = new ThreeSixNineGameImpl();
+      players = [
+        { name: "짱구", incorrectAnswerRate: 1 }, //
+        { name: "훈이", incorrectAnswerRate: 0 },
+        { name: "맹구", incorrectAnswerRate: 0 },
+        { name: "유리", incorrectAnswerRate: 0 },
+      ].map((variable) => new PlayerImpl(variable));
+    });
+
+    it("게임을 종료합니다 메세지 ", () => {
+      const logSpy = getLogSpy();
+      threeSixNineGame.playGame(players);
+
+      // then
+      ["짱구", "게임을 종료합니다."].forEach((output) => {
+        expect(logSpy).toHaveBeenCalledWith(expect.stringContaining(output));
+      });
+
+      expect(logSpy).toHaveBeenCalledTimes(2);
     });
   });
 });
