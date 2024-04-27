@@ -1,5 +1,6 @@
 import { ClapCounter, ClapCounterImpl } from "./ClapCounter";
 import { Player, PlayerImpl } from "./Player";
+import { Util } from "./Util";
 
 export interface ThreeSixNineGame {
   do369: (number: number) => string;
@@ -61,7 +62,7 @@ export class ThreeSixNineGameImpl implements ThreeSixNineGame {
   }
 
   isTurnOfIncorrectAnswer(player: Player) {
-    const random = Math.random();
+    const random = Util.random();
     return player.incorrectAnswerRate > random;
   }
 
